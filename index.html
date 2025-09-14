@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rentify — Navbar</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind Play CDN (good for prototyping) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind config (colors + fonts)
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb',   // blue-600
+            success: '#16a34a',   // green-600
+            accent: '#f97316',    // orange-500
+          },
+          fontFamily: {
+            heading: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+            body: ['Inter', 'Roboto', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* small visual tweak for dropdown animation */
+    .fade-in { animation: fadeIn .12s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px) } to { opacity: 1; transform: translateY(0) } }
+  </style>
+</head>
+<main class="bg-gray-50 text-gray-900 font-body">
+
+  <!-- Sticky Header -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+
+        <!-- Left: Brand + Desktop Links -->
+        <div class="flex items-center gap-6">
+          <a href="/" class="flex items-center gap-3" aria-label="Rentify home">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br from-primary to-indigo-500 text-white font-bold shadow-md">
+              R
+            </div>
+            <span class="hidden sm:inline-block font-semibold text-lg text-gray-900" style="font-family: Poppins, Inter, system-ui;">Rentify</span>
+          </a>
+
+          <div class="hidden md:flex items-center gap-4">
+            <a href="/" class="text-sm font-medium text-gray-700 hover:text-gray-900">Home</a>
+
+            <!-- Categories dropdown -->
+            <div class="relative" id="categories-desktop">
+              <button id="catToggle" class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900" aria-expanded="false">
+                Categories
+                <svg id="catIcon" class="w-4 h-4 transform transition-transform" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 8l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+
+              <div id="catMenu" class="hidden absolute left-0 mt-2 w-44 bg-white border rounded-lg shadow-lg py-1 overflow-hidden">
+                <a href="/categories/apartments" class="block px-4 py-2 text-sm hover:bg-gray-50">Apartments</a>
+                <a href="/categories/equipment" class="block px-4 py-2 text-sm hover:bg-gray-50">Equipment</a>
+                <a href="/categories/vehicles" class="block px-4 py-2 text-sm hover:bg-gray-50">Vehicles</a>
+                <a href="/categories/other" class="block px-4 py-2 text-sm hover:bg-gray-50">Other</a>
+              </div>
+            </div>
+
+            <a href="/about" class="text-sm font-medium text-gray-700 hover:text-gray-900">About</a>
+            <a href="/contact" class="text-sm font-medium text-gray-700 hover:text-gray-900">Contact</a>
+          </div>
+        </div>
+
+        <!-- Center: Search -->
+        <div class="flex-1 mx-6 hidden sm:flex justify-center">
+          <form class="w-full max-w-2xl" role="search" aria-label="Search listings">
+            <div class="relative">
+              <input id="site-search" name="q" type="search" placeholder="Search for items, places or categories..." class="w-full rounded-full border border-gray-200 py-2 pl-4 pr-28 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+              <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1 rounded-full text-sm font-medium bg-primary text-white shadow">Search</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right: Auth / Profile / Mobile button -->
+        <div class="flex items-center gap-4">
+          <!-- Desktop auth -->
+          <div class="hidden md:flex items-center gap-3" id="auth-desktop">
+            <!-- Replace these buttons with dynamic logic when integrating -->
+            <button id="loginBtn" class="text-sm font-medium px-3 py-2 rounded-md hover:bg-gray-50">Login</button>
+            <button id="signupBtn" class="text-sm font-semibold px-3 py-2 rounded-md bg-accent text-white shadow">Sign Up</button>
+          </div>
+
+          <!-- Mobile hamburger -->
+          <div class="md:hidden">
+            <button id="mobileBtn" class="p-2 rounded-md inline-flex items-center justify-center hover:bg-gray-100" aria-expanded="false" aria-controls="mobilePanel">
+              <svg id="hamburgerIcon" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12h18M3 6h18M3 18h18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Panel -->
+    <div id="mobilePanel" class="md:hidden hidden border-t bg-white">
+      <div class="px-4 pt-4 pb-6 space-y-4">
+        <form class="w-full">
+          <input placeholder="Search listings..." class="w-full rounded-full border border-gray-200 py-2 pl-4 pr-10 text-sm shadow-sm" />
+        </form>
+
+        <div class="flex flex-col gap-2">
+          <a href="/" class="px-3 py-2 rounded-md text-sm font-medium">Home</a>
+          <button id="mobileCatBtn" class="w-full text-left px-3 py-2 rounded-md text-sm font-medium">Categories</button>
+          <div id="mobileCatList" class="pl-4 space-y-1 hidden">
+            <a href="/categories/apartments" class="block px-2 py-1 text-sm">Apartments</a>
+            <a href="/categories/equipment" class="block px-2 py-1 text-sm">Equipment</a>
+            <a href="/categories/vehicles" class="block px-2 py-1 text-sm">Vehicles</a>
+          </div>
+          <a href="/about" class="px-3 py-2 rounded-md text-sm font-medium">About</a>
+          <a href="/contact" class="px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+        </div>
+
+        <div class="pt-2 border-t">
+          <div class="flex gap-2">
+            <button class="flex-1 px-3 py-2 rounded-md border">Login</button>
+            <button class="flex-1 px-3 py-2 rounded-md bg-accent text-white">Sign Up</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+<!-- Hero Section (full-screen, polished) -->
+<section class="h-screen w-full bg-gradient-to-br from-primary/70 to-indigo-700 relative overflow-hidden">
+  <!-- Background Image -->
+  <div 
+    class="absolute inset-0 bg-cover bg-center scale-105 animate-slow-zoom" 
+    style="background-image: url('https://images.unsplash.com/photo-1509395176047-4a66953fd231?auto=format&fit=crop&w=1600&q=80');">
+  </div>
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-black/50"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 h-full flex items-center justify-center">
+    <div class="text-center text-white max-w-3xl">
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight opacity-0 animate-fade-in-down" style="font-family: Poppins, Inter, system-ui;">
+        Rent Anything, Anytime
+      </h1>
+      <p class="mt-4 text-lg md:text-xl text-white/80 opacity-0 animate-fade-in-up delay-200">
+        Clothes, Cameras, Event Props, Books All in one place
+      </p>
+
+      <!-- Buttons -->
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-in-up delay-500">
+        <a href="/start-renting" class="inline-flex items-center gap-2 px-7 py-3 rounded-full text-base font-semibold bg-white text-primary shadow-xl hover:shadow-2xl hover:-translate-y-1 transform transition">
+          Start Renting
+        </a>
+        <a href="/become-seller" class="inline-flex items-center gap-2 px-7 py-3 rounded-full text-base font-semibold border border-white/50 text-white hover:bg-white/10 hover:shadow-md transition">
+           Become a Seller
+        </a>
+      </div>
+
+      <!-- Scroll hint -->
+      <div class="mt-12 text-sm text-white/60 animate-bounce">
+        ⬇ Scroll down to explore listings
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Categories Section (HTML + Tailwind) -->
+<section class="py-16 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="text-center mb-8">
+      <h2 class="text-2xl md:text-3xl font-bold" style="font-family: Poppins, Inter, system-ui;">Popular Categories</h2>
+      <p class="mt-2 text-gray-600">Find what you need  fast. Browse by category and start renting today.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Card 1: Clothing & Fashion -->
+      <article class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition transform hover:-translate-y-1">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-2xl">
+            <!-- clothing icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 7v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7" />
+              <path d="M4 7c0-1.1.9-2 2-2h2l1 2 1-2h4l1 2 1-2h2c1.1 0 2 .9 2 2" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold">Clothing &amp; Fashion</h3>
+            <p class="text-sm text-gray-500 mt-1">Rent outfits for events, shoots, and everyday style.</p>
+          </div>
+        </div>
+        <div class="mt-6 flex items-center justify-end">
+          <a href="/categories/clothing" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary text-white hover:bg-primary/90 transition">Explore</a>
+        </div>
+      </article>
+
+      <!-- Card 2: Smart Equipment -->
+      <article class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition transform hover:-translate-y-1">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-lg bg-success/10 flex items-center justify-center text-success text-2xl">
+            <!-- camera / equipment icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2" />
+              <circle cx="12" cy="14" r="3" />
+              <path d="M8 7l1-3h6l1 3" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold">Smart Equipment</h3>
+            <p class="text-sm text-gray-500 mt-1">Cameras, drones, and tools for creators &amp; pros.</p>
+          </div>
+        </div>
+        <div class="mt-6 flex items-center justify-end">
+          <a href="/categories/equipment" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary text-white hover:bg-primary/90 transition">Explore</a>
+        </div>
+      </article>
+
+      <!-- Card 3: Events & Props -->
+      <article class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition transform hover:-translate-y-1">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-lg bg-accent/10 flex items-center justify-center text-accent text-2xl">
+            <!-- props icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 7v6a2 2 0 0 1-2 2h-3" />
+              <path d="M4 7v6a2 2 0 0 0 2 2h3" />
+              <path d="M12 3v18" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold">Events &amp; Props</h3>
+            <p class="text-sm text-gray-500 mt-1"> everything 4 your next event.</p>
+          </div>
+        </div>
+        <div class="mt-6 flex items-center justify-end">
+          <a href="/categories/events" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary text-white hover:bg-primary/90 transition">Explore</a>
+        </div>
+      </article>
+
+      <!-- Card 4: Education -->
+      <article class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition transform hover:-translate-y-1">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl">
+            <!-- book icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M4 4v15.5" />
+              <path d="M20 2H8a2 2 0 0 0-2 2v15" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold">Education</h3>
+            <p class="text-sm text-gray-500 mt-1">Books, courses, and learning kits on rent.</p>
+          </div>
+        </div>
+        <div class="mt-6 flex items-center justify-end">
+          <a href="/categories/education" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary text-white hover:bg-primary/90 transition">Explore</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Page header -->
+    <div class="mb-6 flex items-center justify-between">
+      <h1 class="text-2xl font-bold" style="font-family: Poppins, Inter, system-ui;">Shop</h1>
+      <div class="text-sm text-gray-600">Showing <span id="resultsCount">0</span> items</div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+      <!-- Sidebar Filters -->
+      <aside class="lg:col-span-1">
+        <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-20">
+          <h3 class="text-lg font-semibold mb-3">Filters</h3>
+
+          <!-- Categories -->
+          <div class="mb-6">
+            <h4 class="text-sm font-medium mb-2">Category</h4>
+            <div class="space-y-2 text-sm text-gray-700">
+              <label class="flex items-center gap-2">
+                <input type="checkbox" class="filter-category" value="Clothing" checked>
+                Clothing &amp; Fashion
+              </label>
+              <label class="flex items-center gap-2">
+                <input type="checkbox" class="filter-category" value="Equipment" checked>
+                Smart Equipment
+              </label>
+              <label class="flex items-center gap-2">
+                <input type="checkbox" class="filter-category" value="Events" checked>
+                Events &amp; Props
+              </label>
+              <label class="flex items-center gap-2">
+                <input type="checkbox" class="filter-category" value="Education" checked>
+                Education
+              </label>
+            </div>
+          </div>
+
+          <!-- Price Range -->
+          <div class="mb-6">
+            <h4 class="text-sm font-medium mb-2">Price / day</h4>
+            <div class="text-xs text-gray-500 mb-2">Range: <span id="priceMinLabel">0</span> — <span id="priceMaxLabel">200</span> PKR</div>
+            <div class="space-y-2">
+              <input id="priceMin" type="range" min="0" max="5000" value="0" step="10" class="w-full" />
+              <input id="priceMax" type="range" min="0" max="5000" value="2000" step="10" class="w-full" />
+            </div>
+            <div class="mt-2 text-xs text-gray-500">Tip: drag both sliders to set a range.</div>
+          </div>
+
+          <!-- Availability -->
+          <div class="mb-4">
+            <h4 class="text-sm font-medium mb-2">Availability</h4>
+            <label class="flex items-center gap-3 text-sm">
+              <input id="availabilityToggle" type="checkbox" checked>
+              Only show available now
+            </label>
+          </div>
+
+          <div class="mt-4">
+            <button id="resetFilters" class="w-full inline-flex justify-center items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-medium">Reset Filters</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Products Grid -->
+      <section class="lg:col-span-3">
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <!-- cards injected by JS -->
+        </div>
+
+        <div id="noResults" class="mt-8 hidden text-center text-gray-500">
+          No items match your filters.
+        </div>
+      </section>
+    </div>
+</main>
+
+<!-- Animations -->
+<style>
+  @keyframes fade-in-down {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slow-zoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+  }
+  .animate-fade-in-down { animation: fade-in-down 1s ease forwards; }
+  .animate-fade-in-up { animation: fade-in-up 1s ease forwards; }
+  .animate-slow-zoom { animation: slow-zoom 20s ease-in-out infinite alternate; }
+  .delay-200 { animation-delay: 0.2s; }
+  .delay-500 { animation-delay: 0.5s; }
+</style>
+
+
+  <script>
+    // Simple interactivity (no frameworks)
+    const catToggle = document.getElementById('catToggle');
+    const catMenu = document.getElementById('catMenu');
+    const catIcon = document.getElementById('catIcon');
+
+    catToggle?.addEventListener('click', (e) => {
+      const open = !catMenu.classList.contains('hidden');
+      catMenu.classList.toggle('hidden');
+      catMenu.classList.toggle('fade-in');
+      catIcon.classList.toggle('rotate-180', !open);
+      catToggle.setAttribute('aria-expanded', String(!open));
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const inside = e.composedPath().includes(catToggle) || e.composedPath().includes(catMenu);
+      if (!inside) {
+        if (!catMenu.classList.contains('hidden')) {
+          catMenu.classList.add('hidden');
+          catIcon.classList.remove('rotate-180');
+          catToggle.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
+
+    // Mobile menu toggle
+    const mobileBtn = document.getElementById('mobileBtn');
+    const mobilePanel = document.getElementById('mobilePanel');
+    const hamburgerIcon = document.getElementById('hamburgerIcon');
+
+    mobileBtn?.addEventListener('click', () => {
+      const open = !mobilePanel.classList.contains('hidden');
+      mobilePanel.classList.toggle('hidden');
+      mobileBtn.setAttribute('aria-expanded', String(!open));
+      // swap icon
+      if (!open) {
+        hamburgerIcon.innerHTML = '<path d=\"M6 18L18 6M6 6l12 12\" />';
+      } else {
+        hamburgerIcon.innerHTML = '<path d=\"M3 12h18M3 6h18M3 18h18\" />';
+      }
+    });
+
+    // Mobile categories
+    const mobileCatBtn = document.getElementById('mobileCatBtn');
+    const mobileCatList = document.getElementById('mobileCatList');
+    mobileCatBtn?.addEventListener('click', () => {
+      mobileCatList.classList.toggle('hidden');
+    });
+  </script>
+
+
+ <script>
+    const products = [
+      { id:1, title: 'Professional DSLR Camera', price: 1500, rating:4.8, seller: 'Studio Lens', sellerSlug: 'studio-lens', category: 'Equipment', available: true, image: 'https://images.unsplash.com/photo-1519183071298-a2962be54a29?auto=format&fit=crop&w=800&q=60' },
+      { id:2, title: 'Designer Party Dress', price: 1200, rating:4.5, seller: 'GlamCloset', sellerSlug: 'glamcloset', category: 'Clothing', available: false, image: 'https://images.unsplash.com/photo-1520962914081-6bc0b8d8e6f1?auto=format&fit=crop&w=800&q=60' },
+      { id:3, title: 'Portable Speaker', price: 400, rating:4.2, seller: 'SoundHub', sellerSlug: 'soundhub', category: 'Equipment', available: true, image: 'https://images.unsplash.com/photo-1518444020988-6d3d7b8d40a7?auto=format&fit=crop&w=800&q=60' },
+      { id:4, title: 'Event Lighting Set', price: 900, rating:4.6, seller: 'EventPro', sellerSlug: 'eventpro', category: 'Events', available: true, image: 'https://images.unsplash.com/photo-1508898578281-774ac4893a3d?auto=format&fit=crop&w=800&q=60' },
+      { id:5, title: 'Textbook Bundle (Physics)', price: 250, rating:4.1, seller: 'LearnStore', sellerSlug: 'learnstore', category: 'Education', available: true, image: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=60' },
+      { id:6, title: 'Vintage Camera', price: 800, rating:4.4, seller: 'RetroRent', sellerSlug: 'retrorent', category: 'Equipment', available: false, image: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=800&q=60' },
+      { id:7, title: 'Wedding Decor Set', price: 2000, rating:4.9, seller: 'PartyPlus', sellerSlug: 'partyplus', category: 'Events', available: true, image: 'https://images.unsplash.com/photo-1520697222862-5c9c9f0d3d3b?auto=format&fit=crop&w=800&q=60' },
+      { id:8, title: 'Kids Learning Kit', price: 180, rating:4.0, seller: 'EduBox', sellerSlug: 'edubox', category: 'Education', available: false, image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=800&q=60' }
+    ];
+
+    // Render stars (simple)
+    function renderStars(value) {
+      const full = Math.floor(value);
+      const half = (value - full) >= 0.5;
+      let html = '';
+      for (let i=0;i<full;i++) html += '<svg class="star text-yellow-400" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 .587l3.668 7.431L23.5 9.75l-5.666 5.525L19.3 24 12 20.202 4.7 24l1.466-8.725L.5 9.75l7.832-1.732L12 .587z"/></svg>';
+      if (half) html += '<svg class="star text-yellow-400" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g"><stop offset="50%" stop-color="currentColor"/><stop offset="50%" stop-color="transparent"/></linearGradient></defs><path fill="url(#g)" d="M12 .587l3.668 7.431L23.5 9.75l-5.666 5.525L19.3 24 12 20.202 4.7 24l1.466-8.725L.5 9.75l7.832-1.732L12 .587z"/></svg>';
+      return html;
+    }
+
+    // Product card builder
+    function productCard(p) {
+      return `
+        <article class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition transform hover:-translate-y-1" data-price="${p.price}" data-category="${p.category}" data-available="${p.available}">
+          <a href="/product/${p.id}" class="block">
+            <div class="w-full h-44 bg-gray-100 overflow-hidden">
+              <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover" loading="lazy">
+            </div>
+          </a>
+
+          <div class="p-4">
+            <a href="/product/${p.id}" class="block">
+              <h3 class="text-md font-semibold text-gray-800">${p.title}</h3>
+            </a>
+
+            <div class="mt-2 flex items-center justify-between">
+              <div class="text-sm text-gray-600">
+                <span class="font-semibold text-gray-900">PKR ${p.price}</span>
+                <span class="text-xs text-gray-500">/ day</span>
+              </div>
+
+              <div class="text-sm flex items-center" title="${p.rating} stars">
+                ${renderStars(p.rating)}
+                <span class="ml-2 text-xs text-gray-500">${p.rating.toFixed(1)}</span>
+              </div>
+            </div>
+
+            <div class="mt-3 flex items-center justify-between text-sm">
+              <a href="/seller/${encodeURIComponent(p.sellerSlug)}" class="text-primary font-medium hover:underline">${p.seller}</a>
+              <div class="text-xs ${p.available ? 'text-green-600' : 'text-red-500'} font-medium">${p.available ? 'Available' : 'Unavailable'}</div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    const grid = document.getElementById('productsGrid');
+    const resultsCount = document.getElementById('resultsCount');
+    const noResults = document.getElementById('noResults');
+
+    function renderAll(list) {
+      grid.innerHTML = list.map(productCard).join('');
+      resultsCount.textContent = list.length;
+      noResults.classList.toggle('hidden', list.length > 0);
+    }
+
+    // initial render
+    renderAll(products);
+
+    // Filters
+    const categoryChecks = Array.from(document.querySelectorAll('.filter-category'));
+    const priceMinEl = document.getElementById('priceMin');
+    const priceMaxEl = document.getElementById('priceMax');
+    const priceMinLabel = document.getElementById('priceMinLabel');
+    const priceMaxLabel = document.getElementById('priceMaxLabel');
+    const availabilityToggle = document.getElementById('availabilityToggle');
+    const resetBtn = document.getElementById('resetFilters');
+
+    // sensible bounds from data
+    const prices = products.map(p => p.price);
+    const globalMin = Math.max(0, Math.min(...prices) - 100);
+    const globalMax = Math.max(...prices) + 200;
+    priceMinEl.min = 0; priceMinEl.max = globalMax; priceMaxEl.min = 0; priceMaxEl.max = globalMax;
+    priceMinEl.value = 0; priceMaxEl.value = Math.min(2000, globalMax);
+
+    function updatePriceLabels() {
+      let min = parseInt(priceMinEl.value,10), max = parseInt(priceMaxEl.value,10);
+      if (min > max) [min, max] = [max, min];
+      priceMinLabel.textContent = min;
+      priceMaxLabel.textContent = max;
+    }
+    updatePriceLabels();
+
+    function applyFilters() {
+      const selectedCats = categoryChecks.filter(c => c.checked).map(c => c.value);
+      let min = parseInt(priceMinEl.value,10), max = parseInt(priceMaxEl.value,10);
+      if (min > max) [min,max] = [max,min];
+      const onlyAvail = availabilityToggle.checked;
+
+      const filtered = products.filter(p => {
+        const inCat = selectedCats.includes(p.category);
+        const inPrice = p.price >= min && p.price <= max;
+        const isAvail = onlyAvail ? p.available === true : true;
+        return inCat && inPrice && isAvail;
+      });
+
+      renderAll(filtered);
+    }
+
+    // listeners
+    categoryChecks.forEach(ch => ch.addEventListener('change', applyFilters));
+    [priceMinEl, priceMaxEl].forEach(el => el.addEventListener('input', () => { updatePriceLabels(); applyFilters(); }));
+    availabilityToggle.addEventListener('change', applyFilters);
+    resetBtn.addEventListener('click', () => {
+      categoryChecks.forEach(c => c.checked = true);
+      priceMinEl.value = 0;
+      priceMaxEl.value = Math.min(2000, globalMax);
+      availabilityToggle.checked = true;
+      updatePriceLabels();
+      applyFilters();
+    });
+
+    // set results count on load (already done in renderAll)
+  </script>
+</body>
+</html>
